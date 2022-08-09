@@ -16,7 +16,7 @@ url_delete = "https://reqres.in/api/users/2"
 url_register = "https://reqres.in/api/register"
 
 
-class TestListUsersAPI:
+class TestReqresAPI:
     def test_list_users(self):
         response = requests.get(url_list_users)
         assert response.status_code == 200
