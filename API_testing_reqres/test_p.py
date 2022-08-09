@@ -1,12 +1,13 @@
 import requests
 import json
 
-from API_testing_reqres.utils import extract_data_by_property_name
-from API_testing_reqres.utils import assert_array_by_value
+from utils import extract_data_by_property_name
+from utils import assert_array_by_value
 from test_data import UserData
 from test_data import CreatedUser
 from test_data import DeletedUser
 from test_data import RegisterUser
+import unittest
 
 url_list_users = "https://reqres.in/api/users?page=2"
 url_user_not_found = "https://reqres.in/api/users/23"
@@ -16,7 +17,7 @@ url_delete = "https://reqres.in/api/users/2"
 url_register = "https://reqres.in/api/register"
 
 
-class TestReqresAPI:
+class TestReqresAPI(unittest.TestCase):
     def test_list_users(self):
         response = requests.get(url_list_users)
         assert response.status_code == 200
@@ -40,7 +41,7 @@ class TestReqresAPI:
         test_response = (requests.get(url_create)).json()
         assert 'name', 'job' in test_response != CreatedUser.user_name_job
 
-        file = open('../create_a_user.json', 'r')
+        file = open('./create_a_user.json', 'r')
         user = json.loads(file.read())
         response = requests.post(url_create, user)
         assert response.status_code == 201
@@ -48,7 +49,7 @@ class TestReqresAPI:
         file.close()
 
     def test_update_user(self):
-        file = open('../create_a_user.json', 'r')
+        file = open('./create_a_user.json', 'r')
         request_json = json.loads(file.read())
         response = requests.put(url_update, request_json)
         assert response.status_code == 200
@@ -64,7 +65,7 @@ class TestReqresAPI:
         assert response_to_delete != DeletedUser.deleted_user_data
 
     def test_register_successful_user(self):
-        file = open('../register_successful_user.json', 'r')
+        file = open('./register_successful_user.json', 'r')
         user = json.loads(file.read())
         response = requests.post(url_register, user)
         assert response.status_code == 200
@@ -72,9 +73,11 @@ class TestReqresAPI:
         file.close()
 
     def test_register_unsuccessful_user(self):
-        file = open('../register_unsuccessful_user.json', 'r')
+        file = open('./register_unsuccessful_user.json', 'r')
         user = json.loads(file.read())
         response = requests.post(url_register, user)
         assert response.status_code == 400
         assert response.json() == RegisterUser.register_unsuccessful_data
         file.close()
+
+
